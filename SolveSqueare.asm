@@ -26,6 +26,8 @@ POP cx
 PUUSH cx
 PUUSH bx
 DIV
+SQRT
+
 OUT
 RET
 
