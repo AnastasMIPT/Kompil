@@ -36,12 +36,24 @@ RET
 
 CALL diskriminant
 
-
-
+PUSH 0
+PUUSH dx
+JNE dxnotnull
+PUSH -1
+PUUSH bx
+MUL
 PUSH 2
+PUUSH ax
+MUL
+DIV
+
+PUSH 1
+OUT
 OUT
 
+RET
 
+:dxnotnull
 
 
 
