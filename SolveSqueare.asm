@@ -6,9 +6,19 @@ POP bx
 POP ax
 
 PUSH 0
+
 PUUSH ax
 JNE axnotnull
+CALL linenoeur
 
+:axnotnull
+PUSH 2
+OUT
+
+RET
+
+
+:linenoeur
 PUSH 0
 PUUSH bx
 JNE bxnotnull
@@ -29,11 +39,5 @@ DIV
 SQRT
 
 OUT
-RET
-
-:axnotnull
-PUSH 2
-OUT
-
 RET
 ENDING
