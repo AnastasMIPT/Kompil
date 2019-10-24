@@ -72,7 +72,18 @@ DEF_CMD (DIV, 5, NOARGUMENTS_T, {
     int b = PRECISION * StackPop (&stk);
    // printf ("%lf\n", (b / a));
     StackPush (&stk, b / a);
-//Dump ("????????", stdout, 1, " ", &stk);
+Dump ("????????", stdout, 1, " ", &stk);
+    cur++;
+})
+
+DEF_CMD (SQRT, 6, NOARGUMENTS_T, {
+    printf ("%s ", "SQRT");
+    //  Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+    double a = ((double) StackPop (&stk)) / PRECISION;
+    int b = (int) (PRECISION * sqrt (a));
+    // printf ("%lf\n", (b / a));
+    StackPush (&stk, b);
+    //Dump ("????????", stdout, 1, " ", &stk);
     cur++;
 })
 
