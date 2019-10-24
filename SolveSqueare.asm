@@ -14,7 +14,7 @@ CALL linenoeur
 :axnotnull
 
 PUSH 0
-PUSH bx
+PUUSH bx
 JNE bnotnull
 PUSH -1
 PUUSH cx
@@ -30,7 +30,13 @@ PUSH 1
 OUT
 OUT
 
+RET
+
 :bnotnull
+
+CALL diskriminant
+
+
 
 PUSH 2
 OUT
@@ -64,6 +70,19 @@ OUT
 
 RET
 
+:diskriminant
 
+PUUSH cx
+PUUSH ax
+PUSH 4
+MUL
+MUL
+PUUSH bx
+PUUSH bx
+MUL
+SUB
+POP dx
+
+RET
 
 ENDING
