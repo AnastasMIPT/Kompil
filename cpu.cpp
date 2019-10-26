@@ -9,12 +9,7 @@
 #define DEF_CMD(name, num, mode, code)      \
     case num: code; break;     \
 
-
-int CPUdo (FILE* f_in);
-
-
 const int RegNum = 8;
-
 struct CPU
 {
     FILE* f_in;
@@ -27,6 +22,9 @@ struct CPU
 };
 
 void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize);
+void CPUdistruct (struct CPU* cpu);
+
+int CPUdo (FILE* f_in);
 
 
 int main () {
@@ -36,21 +34,19 @@ int main () {
 
     CPUdo(f_input);
 
+    fclose (f_input);
+
     return 0;
 }
 
 int CPUdo (FILE* f_in) {
 
 
-
-
     struct stat FIN = {};
-
     if (fstat (fileno (f_in), &FIN) == -1 || FIN.st_size == 0) {
         printf("ERROR: Inadmissible or empty file\n");
         return 1;
     }
-
 
     CPU cpu;
     CPUconstruct (&cpu, f_in, FIN.st_size);
@@ -72,8 +68,8 @@ int CPUdo (FILE* f_in) {
     printf ("%d\n", cpu.registers[1]);
     printf ("%d\n", cpu.registers[2]);
 
-    //free(malloc(100));
-    //free(&stkv);
+    CPUdistruct (&cpu);
+
     return 0;
 }
 
@@ -87,6 +83,13 @@ void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize) {
     cpu->cur =cpu->buf;
     cpu->f_in = f_in;
 
+}
+
+void CPUdistruct (struct CPU* cpu) {
+
+    free (cpu->stk.data);
+    free (cpu->stkv.data);
+    free (cpu->buf);
 }
 
 #undef DEF_CMD
