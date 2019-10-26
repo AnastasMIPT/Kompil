@@ -1,32 +1,49 @@
 #include <stdio.h>
 #include <AnastasLib\Enum.h>
-#include <AnastasLib\StackStatic.h>
+#include <AnastasLib\Stack.h>
 #include <assert.h>
 #include <sys\stat.h>
 #include <stdlib.h>
+#include <cmath>
 
 #define DEF_CMD(name, num, mode, code)      \
     case num: code; break;     \
 
 
-int CPU (FILE* f_in);
+int CPUdo (FILE* f_in);
+
 
 const int RegNum = 8;
 
-int main () {
+struct CPU
+{
+    FILE* f_in;
+    int registers[RegNum];
+    int bufsize;
+    char* buf;
+    char* cur;
+    Stack_t stk;
+    Stack_t stkv;
+};
 
+void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize);
+
+
+int main () {
 
     setbuf (stdout, NULL);
     FILE* f_input = fopen (AsmFilesPathO, "rb");
 
-    CPU (f_input);
+    CPUdo(f_input);
 
     return 0;
 }
 
-int CPU (FILE* f_in) {
+int CPUdo (FILE* f_in) {
 
-//    Testing();
+
+
+
     struct stat FIN = {};
 
     if (fstat (fileno (f_in), &FIN) == -1 || FIN.st_size == 0) {
@@ -34,42 +51,42 @@ int CPU (FILE* f_in) {
         return 1;
     }
 
-    char* buf = (char*) calloc (FIN.st_size, sizeof (char));
 
-    if (!buf) printf ("ERROR: impossible to get memery for buffer");
-    assert (buf);
+    CPU cpu;
+    CPUconstruct (&cpu, f_in, FIN.st_size);
 
-    char* cur = buf;
+    fread (cpu.buf, sizeof (char), cpu.bufsize, cpu.f_in);
 
-    fread (buf, sizeof (char), FIN.st_size, f_in);
+    StackPush (&cpu.stkv, cpu.bufsize - 1);
 
-    Stack_t stk;
-    StackConstruct (stk)
-
-    Stack_t stkv;
-    StackConstruct (stkv)
-
-    StackPush (&stkv, FIN.st_size - 1);
-
-    int registers[RegNum] = {};
-
-
-    while (*cur != CMD_ENDING) {
-        switch (*cur) {
+    while (*cpu.cur != CMD_ENDING) {
+        switch (*cpu.cur) {
             #include <AnastasLib\commands.h>
             default:
-                printf ("ERROR value = %d\n", *cur);
+                printf ("ERROR value = %d\n", *cpu.cur);
         }
     }
 
     //printf ("%d\n", StackPop (&stk));
-    printf ("%d\n", registers[0]);
-    printf ("%d\n", registers[1]);
-    printf ("%d\n", registers[2]);
+    printf ("%d\n", cpu.registers[0]);
+    printf ("%d\n", cpu.registers[1]);
+    printf ("%d\n", cpu.registers[2]);
 
     //free(malloc(100));
     //free(&stkv);
     return 0;
+}
+
+void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize) {
+
+    StackConstruct (cpu->stk)
+    StackConstruct (cpu->stkv)
+    cpu->registers[RegNum] = {};
+    cpu->bufsize = bufsize;
+    cpu->buf = (char*) calloc (cpu->bufsize, sizeof (char));
+    cpu->cur =cpu->buf;
+    cpu->f_in = f_in;
+
 }
 
 #undef DEF_CMD
