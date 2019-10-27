@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include <AnastasLib\Stack.h>
+#include <assert.h>
 #include <AnastasLib\Enum.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <sys\stat.h>
 
 
@@ -21,8 +21,9 @@ struct Label
     char* Value;
 };
 
+
 const int LenArgument = 11;
-const int LenCommand = 7;
+const int LenCommand = 15;
 const int Nlabels = 10;
 const int LenLabels = 10;
 const double rat = 1.5;
@@ -49,42 +50,43 @@ int main () {
 
 FILE* ASM (FILE* file_in, FILE* file_out) {
 
+
     char command[LenCommand] = {};
     char  arg[LenArgument] = {};
 
     struct stat FIN = {};
     fstat (fileno (file_in), &FIN);
 
+    char* buf = (char*) calloc ((int) (FIN.st_size / rat), sizeof (char));
 
-    char* buf = (char*) calloc (FIN.st_size / rat, sizeof (char));
     if (!buf) printf ("ERROR, impossible to get memory to buffer");
     //assert (buf);
     char* ptr = buf;
 
-    char* str = (char*) calloc (10, sizeof (char));
-    memset (str, 0, LenLabels * sizeof (char));
-    Label labels[Nlabels];
+    Label labels[Nlabels] = {};
 
     for (int i = 0; i < Nlabels; i++) {
         labels[i].Name = (char*) calloc (LenLabels, sizeof (char));
         memset (labels[i].Name, 0, LenLabels * sizeof (char));
+        labels[i].Value = {};
     }
 
     int NumLabel = 0;
     for (int j = 0; j != 2; j++) {
-        ptr = buf;
+        ptr =  buf;
         memset (command, 0, LenCommand * sizeof (char));
         fseek (file_in, 0, SEEK_SET);
 
-        while (strcmp(command, "ENDING") != 0) {
-            memset(arg, 0, LenArgument);
-            fscanf(file_in, "%s", command);
-            fprintf(stdout, "%s ", command);
+        while (strcmp (command, "ENDING") != 0) {
+
+            memset (arg, 0, LenArgument);
+            fscanf (file_in, "%s", command);
+            fprintf (stdout, "%s ", command);
             #include <AnastasLib/commands.h>
             if (j == 0) {
-                if (*command == ':' && (NumLabel == 0 || strcmp(labels[NumLabel - 1].Name, command) != 0)) {
-                    printf("\n");
-                    strcpy(labels[NumLabel].Name, command + 1);
+                if (*command == ':' && (NumLabel == 0 || strcmp (labels[NumLabel - 1].Name, command) != 0)) {
+                    printf ("\n");
+                    strcpy (labels[NumLabel].Name, command + 1);
                     labels[NumLabel].Value = ptr;
                     NumLabel++;
                 }
@@ -95,6 +97,7 @@ FILE* ASM (FILE* file_in, FILE* file_out) {
     int SizeBuf = (int) (ptr - buf);
     fwrite (buf, sizeof (char), SizeBuf, file_out);
     free (buf);
+
 
     return file_out;
 }
@@ -116,10 +119,8 @@ char* CommandAnalizator (FILE* code, char* ptr, Label* labels, char * arg, char*
                 fscanf (code, "%s", arg);
                 printf ("%s\n", arg);
 
-                for (int i = 0; arg[i] != '\0'; ptr++, i++)
-                    *ptr = arg[i];
+                *ptr = arg[0];
 
-                *ptr = '\0';
                 ptr++;
                 break;
             case LABEL_T:

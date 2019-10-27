@@ -63,7 +63,6 @@ int CPUdo (FILE* f_in) {
         }
     }
 
-    //printf ("%d\n", StackPop (&stk));
     printf ("%d\n", cpu.registers[0]);
     printf ("%d\n", cpu.registers[1]);
     printf ("%d\n", cpu.registers[2]);
@@ -78,6 +77,8 @@ void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize) {
     StackConstruct (cpu->stk)
     StackConstruct (cpu->stkv)
     cpu->registers[RegNum] = {};
+    for (int i = 0; i < RegNum; i++)
+        cpu->registers[i] = 0;
     cpu->bufsize = bufsize;
     cpu->buf = (char*) calloc (cpu->bufsize, sizeof (char));
     cpu->cur =cpu->buf;

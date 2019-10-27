@@ -24,8 +24,7 @@ DEF_CMD (PUUSH, 11, REGISTER_T, {
 
     //printf ("%d\n", cpu.registers[0]);
     //Dump (" ", stdout, 1, " ", &cpu.stk);
-    cpu.cur += 3;
-    cpu.cur++;
+    cpu.cur += 2;
 //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
 })
@@ -33,8 +32,7 @@ DEF_CMD (PUUSH, 11, REGISTER_T, {
 DEF_CMD (POP, 12, REGISTER_T, {
     printf ("%s\n", "POP");
     cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
-    cpu.cur += 3;
-    cpu.cur++;
+    cpu.cur += 2;
 //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
 })
