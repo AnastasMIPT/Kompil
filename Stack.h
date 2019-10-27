@@ -17,8 +17,8 @@
 typedef int el_t;
 const int NChars  = 10;
 const el_t Poison = -667766;
-const double k_up = 1.5;
-const int delta   = 10;
+const double k_up = 2;
+const int delta   = 3;
 const long long CANARY  = 123456789123456789;
 
 
@@ -200,7 +200,7 @@ Stack_t* StackMemDown (Stack_t* stk) {
     ASSERT_OK (stk);
 
     int NewSize = (1 / k_up) * stk->NElements;
-    stk->data = (el_t*) (realloc(stk->data, delta + NewSize  * sizeof(el_t)));
+    stk->data = (el_t*) realloc (stk->data, (delta + NewSize)  * sizeof(el_t));
     stk->NElements = delta + NewSize;
 
     ASSERT_OK (stk);
