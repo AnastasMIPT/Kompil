@@ -19,10 +19,10 @@ enum TypesOfArgument {
     IMMED_T,
     REGISTER_T,
     LABEL_T,
-    ROM_T
+    RAM_T
 };
 
-const char* AsmFilesPathI = "F:\\Programming\\asm_files\\SolveSqueare.asm";
+const char* AsmFilesPathI = "F:\\Programming\\asm_files\\input.asm";
 const char* AsmFilesPathO = "F:\\Programming\\asm_files\\output.ex";
 const char* DisAsmFilesPathO = "F:\\Programming\\asm_files\\DisasmProgram.asm";
 
