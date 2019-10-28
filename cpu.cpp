@@ -10,10 +10,12 @@
     case num: code; break;     \
 
 const int RegNum = 8;
+const int LenRAM = 500;
 struct CPU
 {
     FILE* f_in;
     int registers[RegNum];
+    int RAM[LenRAM];
     int bufsize;
     char* buf;
     char* cur;
@@ -76,9 +78,15 @@ void CPUconstruct (struct CPU* cpu, FILE* f_in, int bufsize) {
 
     StackConstruct (cpu->stk)
     StackConstruct (cpu->stkv)
+
     cpu->registers[RegNum] = {};
     for (int i = 0; i < RegNum; i++)
         cpu->registers[i] = 0;
+
+    cpu->RAM[LenRAM] = {};
+    for (int i = 0; i < LenRAM; i++)
+        cpu->RAM[i] = 0;
+
     cpu->bufsize = bufsize;
     cpu->buf = (char*) calloc (cpu->bufsize, sizeof (char));
     cpu->cur =cpu->buf;
