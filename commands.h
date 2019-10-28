@@ -101,14 +101,14 @@ DEF_CMD (IN, 10, NOARGUMENTS_T, {
 })
 
 
-DEF_CMD (JUMP, 21, LABEL_T, {
+DEF_CMD (JUMP, 23, LABEL_T, {
     printf ("%s ", "JUMP");
     int val = *(int*) (cpu.cur + 1);
     printf ("%d\n", val);
     cpu.cur = cpu.buf +  val;
 })
 
-DEF_CMD (JA, 22, LABEL_T, {
+DEF_CMD (JA, 24, LABEL_T, {
     printf ("%s ", "JA");
     int val = *(int*) (cpu.cur + 1);
     printf ("%d\n", val);
