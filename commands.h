@@ -141,7 +141,7 @@ DEF_CMD (JNE, 27, LABEL_T, {
 })
 
 
-DEF_CMD (CALL, 31, LABEL_T, {
+DEF_CMD (CALL, 33, LABEL_T, {
     printf ("%s ", "CALL");
     int val = *(int*) (cpu.cur + 1);
     printf ("%d\n", val);
@@ -151,7 +151,7 @@ DEF_CMD (CALL, 31, LABEL_T, {
     //Dump (" ", stdout, 2, " ",&stkv);
 })
 
-DEF_CMD (RET, 32, NOARGUMENTS_T, {
+DEF_CMD (RET, 34, NOARGUMENTS_T, {
     printf ("%s ", "RET");
     //Dump (" ", stdout, 2, " ",&stk);
     int val = StackPop (&cpu.stkv);
