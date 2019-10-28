@@ -1,14 +1,14 @@
 PUSH 1
 POP ax
 :next
-PUUSH ax
+PUSHR ax
 PUSH 30
 JA stop
-PUUSH ax
-PUUSH ax
+PUSHR ax
+PUSHR ax
 MUL
 OUT
-PUUSH ax
+PUSHR ax
 PUSH 1
 ADD
 POP ax

@@ -1,18 +1,18 @@
 IN
 POP ax
-PUUSH ax
+PUSHR ax
 CALL fact
 OUT
 RET
 :fact
-PUUSH ax
+PUSHR ax
 PUSH 1
 JE next
 PUSH 1
-PUUSH ax
+PUSHR ax
 SUB
 POP ax
-PUUSH ax
+PUSHR ax
 CALL fact
 MUL
 :next
