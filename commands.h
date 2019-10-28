@@ -9,7 +9,7 @@ DEF_CMD (PUSH, 1, IMMED_T, {
     StackPush (&cpu.stk, *((int*) (cpu.cur + 1)) * PRECISION);
     cpu.cur += sizeof (int);
     cpu.cur++;
-//Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
 })
 
@@ -21,8 +21,8 @@ DEF_CMD (PUSHR, 11, REGISTER_T, {
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
 
     StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
-
     //Dump (" ", stdout, 1, " ", &cpu.stk);
+
     cpu.cur += 2;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
@@ -31,12 +31,15 @@ DEF_CMD (PUSHR, 11, REGISTER_T, {
 DEF_CMD (PUSHRAM, 21, RAM_T, {
     printf ("%s ", "PUSHRAM");
 
-    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    printf ("%d\n", cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION + *(int*) (cpu.cur + 2)]);
+
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
 
-    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+
+    StackPush (&cpu.stk, cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION + *(int*) (cpu.cur + 2)]);
 
     //Dump (" ", stdout, 1, " ", &cpu.stk);
+    cpu.cur += sizeof (int);
     cpu.cur += 2;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
@@ -45,10 +48,10 @@ DEF_CMD (PUSHRAM, 21, RAM_T, {
 DEF_CMD (PUSHRAMREG, 31, RAM_T, {
     printf ("%s ", "PUSHRAMREG");
 
-    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    printf ("%d\n", cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION]);
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
 
-    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+    StackPush (&cpu.stk, cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION]);
 
     //Dump (" ", stdout, 1, " ", &cpu.stk);
     cpu.cur += 2;
@@ -59,13 +62,14 @@ DEF_CMD (PUSHRAMREG, 31, RAM_T, {
 DEF_CMD (PUSHRAMD, 41, RAM_T, {
     printf ("%s ", "PUSHRAMD");
 
-    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    printf ("%d\n", cpu.RAM[*(int*) (cpu.cur + 1)]);
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
 
-    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+    StackPush (&cpu.stk, cpu.RAM[*(int*) (cpu.cur + 1)]);
 
     //Dump (" ", stdout, 1, " ", &cpu.stk);
-    cpu.cur += 2;
+    cpu.cur += sizeof (int);
+    cpu.cur++;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
 })
@@ -80,7 +84,8 @@ DEF_CMD (POP, 12, REGISTER_T, {
 
 DEF_CMD (POPRAM, 22, RAM_T, {
     printf ("%s\n", "POPRAM");
-    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
+    cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION + *(int*) (cpu.cur + 2)] = StackPop (&cpu.stk);
+    cpu.cur += sizeof (int);
     cpu.cur += 2;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
@@ -88,7 +93,7 @@ DEF_CMD (POPRAM, 22, RAM_T, {
 
 DEF_CMD (POPRAMREG, 32, RAM_T, {
     printf ("%s\n", "POPRAMREG");
-    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
+    cpu.RAM[cpu.registers[*(cpu.cur + 1) - 'a'] / PRECISION] = StackPop (&cpu.stk);
     cpu.cur += 2;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
@@ -96,8 +101,9 @@ DEF_CMD (POPRAMREG, 32, RAM_T, {
 
 DEF_CMD (POPRAMD, 42, RAM_T, {
     printf ("%s\n", "POPRAMD");
-    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
-    cpu.cur += 2;
+    cpu.RAM[*(int*) (cpu.cur + 1)] = StackPop (&cpu.stk);
+    cpu.cur += sizeof (int);
+    cpu.cur++;
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
 })
@@ -118,12 +124,12 @@ DEF_CMD (SUB, 3, NOARGUMENTS_T, {
 
 DEF_CMD (MUL, 4, NOARGUMENTS_T, {
     printf ("%s ", "MUL");
-//Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
-int mul = StackPop (&cpu.stk) * StackPop (&cpu.stk) / PRECISION;
+    int mul = StackPop (&cpu.stk) * StackPop (&cpu.stk) / PRECISION;
     printf ("%lf\n", (double) mul / PRECISION);
     StackPush (&cpu.stk, mul);
-//Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
     cpu.cur++;
 })
@@ -134,9 +140,9 @@ DEF_CMD (DIV, 5, NOARGUMENTS_T, {
     Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
     int a = StackPop (&cpu.stk);
     int b = PRECISION * StackPop (&cpu.stk);
-   // printf ("%lf\n", (b / a));
+    // printf ("%lf\n", (b / a));
     StackPush (&cpu.stk, b / a);
-Dump ("????????", stdout, 1, " ", &cpu.stk);
+    Dump ("????????", stdout, 1, " ", &cpu.stk);
     cpu.cur++;
 })
 
