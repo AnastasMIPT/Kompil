@@ -24,10 +24,51 @@ DEF_CMD (PUSHR, 11, REGISTER_T, {
 
     //Dump (" ", stdout, 1, " ", &cpu.stk);
     cpu.cur += 2;
-//Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
 })
 
+DEF_CMD (PUSHRAM, 21, RAM_T, {
+    printf ("%s ", "PUSHRAM");
+
+    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
+
+    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+
+    //Dump (" ", stdout, 1, " ", &cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
+
+})
+
+DEF_CMD (PUSHRAMREG, 31, RAM_T, {
+    printf ("%s ", "PUSHRAMREG");
+
+    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
+
+    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+
+    //Dump (" ", stdout, 1, " ", &cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
+
+})
+
+DEF_CMD (PUSHRAMD, 41, RAM_T, {
+    printf ("%s ", "PUSHRAMD");
+
+    printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
+
+    StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
+
+    //Dump (" ", stdout, 1, " ", &cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
+
+})
 
 DEF_CMD (POP, 12, REGISTER_T, {
     printf ("%s\n", "POP");
@@ -36,6 +77,31 @@ DEF_CMD (POP, 12, REGISTER_T, {
 //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
 
 })
+
+DEF_CMD (POPRAM, 22, RAM_T, {
+    printf ("%s\n", "POPRAM");
+    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+
+})
+
+DEF_CMD (POPRAMREG, 32, RAM_T, {
+    printf ("%s\n", "POPRAMREG");
+    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+
+})
+
+DEF_CMD (POPRAMD, 42, RAM_T, {
+    printf ("%s\n", "POPRAMD");
+    cpu.registers[*(cpu.cur + 1) - 'a'] = StackPop (&cpu.stk);
+    cpu.cur += 2;
+    //Dump ("&&&&&&&&&&", stdout, 1, " ", &stk);
+
+})
+
 
 DEF_CMD (ADD, 2, NOARGUMENTS_T,
 {
