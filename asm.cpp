@@ -54,8 +54,8 @@ int main () {
 FILE* ASM (FILE* file_in, FILE* file_out) {
 
 
-    char command[LenCommand] = {};
-    char  arg[LenArgument] = {};
+    char command[LenCommand] = "";
+    char  arg[LenArgument] = "";
 
     struct stat FIN = {};
     fstat (fileno (file_in), &FIN);
