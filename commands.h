@@ -14,20 +14,20 @@ DEF_CMD (PUSH, 1, IMMED_T, {
 })
 
 
-DEF_CMD (PUUSH, 11, REGISTER_T, {
-    printf ("%s ", "PUUSH");
+DEF_CMD (PUSHR, 11, REGISTER_T, {
+    printf ("%s ", "PUSHR");
 
     printf ("%d\n", cpu.registers[*(cpu.cur + 1) - 'a']);
     //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stkv);
 
     StackPush (&cpu.stk, cpu.registers[*(cpu.cur + 1) - 'a']);
 
-    //printf ("%d\n", cpu.registers[0]);
     //Dump (" ", stdout, 1, " ", &cpu.stk);
     cpu.cur += 2;
 //Dump ("&&&&&&&&&&", stdout, 1, " ", &cpu.stk);
 
 })
+
 
 DEF_CMD (POP, 12, REGISTER_T, {
     printf ("%s\n", "POP");
