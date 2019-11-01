@@ -33,7 +33,8 @@ const double rat = 1.5;
 FILE* ASM (FILE* file_in, FILE* file_out);
 char* CommandAnalizator (FILE* logs, char* ptr, Label* labels,
                          char* arg, char* buf, int mode, int NumCommand);
-
+Label* LabelSearch (Label** labels, Label* label);
+Label LabelInit (Label label, int LenOfLabel);
 
 int main () {
 
@@ -47,7 +48,6 @@ int main () {
 
     fclose (f_in);
     fclose (f_out);
-
     return 0;
 }
 
@@ -69,9 +69,7 @@ FILE* ASM (FILE* file_in, FILE* file_out) {
     Label labels[Nlabels] = {};
 
     for (int i = 0; i < Nlabels; i++) {
-        labels[i].Name = (char*) calloc (LenLabels, sizeof (char));
-        memset (labels[i].Name, 0, LenLabels * sizeof (char));
-        labels[i].Value = {};
+          labels[i] = LabelInit (labels[i], LenLabels);
     }
 
     int NumLabel = 0;
@@ -105,6 +103,26 @@ FILE* ASM (FILE* file_in, FILE* file_out) {
     return file_out;
 }
 #undef DEF_CMD
+Label LabelInit (Label label, int LenOfLabel) {
+    label.Name = (char*) calloc (LenOfLabel, sizeof (char));
+    memset (label.Name, 0, LenOfLabel * sizeof (char));
+    label.Value = {};
+    return label;
+}
+
+Label LabelSearch (Label* labels, char* label) {
+    Label rezult;
+    LabelInit (rezult, LenLabels);
+
+    for (int i = 0; *labels[i].Name != '\0' && i < Nlabels; i++) {
+
+        if (strcmp (labels[i].Name, label) == 0) {
+            rezult = labels[i];
+            break;
+        }
+    }
+    return rezult;
+}
 
 char* CommandAnalizator (FILE* logs, char* ptr, Label* labels, char* arg, char* buf, int mode, int NumCommand) {
 
