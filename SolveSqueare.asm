@@ -97,7 +97,13 @@ RET
 PUSH 0
 PUSHR bx
 JNE bxnotnull
-
+PUSH 0
+PUSH cx
+JNE cxnotnull
+PUSH -1
+OUT
+RET
+:cxnotnull
 PUSH 0
 OUT
 RET
