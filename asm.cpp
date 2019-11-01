@@ -35,6 +35,7 @@ char* CommandAnalizator (FILE* logs, char* ptr, Label* labels,
                          char* arg, char* buf, int mode, int NumCommand);
 Label* LabelSearch (Label** labels, Label* label);
 Label LabelInit (Label label, int LenOfLabel);
+int AddCommandIfLabel (Label* labels, int NumLabel, char* command, char* ptr);
 
 int main () {
 
@@ -85,12 +86,8 @@ FILE* ASM (FILE* file_in, FILE* file_out) {
             fprintf (stdout, "%s ", command);
             #include <AnastasLib/commands.h>
             if (j == 0) {
-                if (*command == ':' && (NumLabel == 0 || strcmp (labels[NumLabel - 1].Name, command) != 0)) {
-                    printf ("\n");
-                    strcpy (labels[NumLabel].Name, command + 1);
-                    labels[NumLabel].Value = ptr;
-                    NumLabel++;
-                }
+                NumLabel = AddCommandIfLabel (labels, NumLabel, command, ptr);
+
             }
         }
     }
@@ -103,6 +100,7 @@ FILE* ASM (FILE* file_in, FILE* file_out) {
     return file_out;
 }
 #undef DEF_CMD
+
 Label LabelInit (Label label, int LenOfLabel) {
     label.Name = (char*) calloc (LenOfLabel, sizeof (char));
     memset (label.Name, 0, LenOfLabel * sizeof (char));
@@ -124,6 +122,15 @@ Label LabelSearch (Label* labels, char* label) {
     return rezult;
 }
 
+int AddCommandIfLabel (Label* labels, int NumLabel, char* command, char* ptr) {
+    if (*command == ':' && (NumLabel == 0 || strcmp (labels[NumLabel - 1].Name, command) != 0)) {
+        printf ("\n");
+        strcpy (labels[NumLabel].Name, command + 1);
+        labels[NumLabel].Value = ptr;
+        NumLabel++;
+    }
+    return NumLabel;
+}
 char* CommandAnalizator (FILE* logs, char* ptr, Label* labels, char* arg, char* buf, int mode, int NumCommand) {
 
     switch (mode) {
@@ -148,14 +155,8 @@ char* CommandAnalizator (FILE* logs, char* ptr, Label* labels, char* arg, char* 
                 fscanf (logs, "%s", arg);
                 printf ("%s\n", arg);
 
-                for (int i = 0; *labels[i].Name != '\0' && i < Nlabels; i++) {
+                *(int*) ptr = (int) (LabelSearch (labels, arg).Value - buf);
 
-                    if (strcmp (labels[i].Name, arg) == 0) {
-
-                        *(int*) ptr = (int) (labels[i].Value - buf);
-                        break;
-                     }
-                }
                 printf ("%d\n", *(int*) ptr);
                 ptr += sizeof (int);
                 break;
